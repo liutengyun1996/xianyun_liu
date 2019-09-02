@@ -1,16 +1,23 @@
 <template>
   <div>
+    <!-- 插入头部主件 -->
     <Header/>
-    <nuxt />
+
+    <nuxt/>
+
+    <!--插入底部主件  -->
+    <Footer/>
   </div>
 </template>
 <script>
 //导入heaher头部组件
 import Header from '@/components/header.vue';
+import Footer from '@/components/footer.vue';
 export default {
     //注册组件
     components:{
-      Header
+      Header,
+      Footer
     }
 }
 </script>
