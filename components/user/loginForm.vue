@@ -38,14 +38,21 @@ export default {
     // 提交登录
     handleLoginSubmit() {
       console.log(this.form);
-      this.$refs.form.validate(valid=>{
-          //当valid的值等于true说明表单验证通过
-          if(valid){
-              console.log('验证通过')
-          }else{
-              console.log('验证失败')
-          }
-      })
+      this.$refs.form.validate(valid => {
+        //当valid的值等于true说明表单验证通过
+        if (valid) {
+          //   console.log('验证通过')
+          this.$axios({
+            url: "/accounts/login",
+            method: "POST", //重要   method没有s
+            data: this.form
+          }).then(res => {
+            console.log(res);
+          });
+        } else {
+          console.log("验证失败");
+        }
+      });
     }
   }
 };
