@@ -1,11 +1,11 @@
 
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" v-model="form.username">
       <el-input placeholder="用户名手机"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" v-model="form.captcha">
       <!-- 文档地址：https://element.eleme.cn/#/zh-CN/component/input#fu-he-xing-shu-ru-kuang -->
       <el-input placeholder="验证码">
         <template slot="append">
@@ -14,15 +14,15 @@
       </el-input>
     </el-form-item>
 
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" v-model="form.nickname">
       <el-input placeholder="你的名字"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" v-model="form.password">
       <el-input placeholder="密码" type="password"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" v-model="form.checkPassword">
       <el-input placeholder="确认密码" type="password"></el-input>
     </el-form-item>
 
@@ -35,7 +35,13 @@ export default {
   data() {
     return {
       // 表单数据
-      form: {},
+      form: {
+        username:'', //用户名
+        nickname:'', //昵称
+        captcha:'', //验证码
+        password:'', //密码
+        checkPassword:'',  //确认密码
+      },
       // 表单规则
       rules: {}
     };
