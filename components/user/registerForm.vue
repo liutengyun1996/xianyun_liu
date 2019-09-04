@@ -1,29 +1,30 @@
 
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
-    <el-form-item class="form-item" v-model="form.username">
-      <el-input placeholder="用户名手机"></el-input>
+    <el-form-item class="form-item" prop="username">
+      <el-input placeholder="用户名手机" v-model="form.username"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item" v-model="form.captcha">
+    <el-form-item class="form-item" prop="captcha">
       <!-- 文档地址：https://element.eleme.cn/#/zh-CN/component/input#fu-he-xing-shu-ru-kuang -->
-      <el-input placeholder="验证码">
+      <el-input placeholder="验证码" v-model="form.captcha">
         <template slot="append">
+          <!-- 内部实现了调用 this.$emit("click") 触发传递的方法-->
           <el-button @click="handleSendCaptcha">发送验证码</el-button>
         </template>
       </el-input>
     </el-form-item>
 
-    <el-form-item class="form-item" v-model="form.nickname">
-      <el-input placeholder="你的名字"></el-input>
+    <el-form-item class="form-item" prop="nickname">
+      <el-input placeholder="你的名字" v-model="form.nickname"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item" v-model="form.password">
-      <el-input placeholder="密码" type="password"></el-input>
+    <el-form-item class="form-item" prop="password">
+      <el-input placeholder="密码" type="password" v-model="form.password"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item" v-model="form.checkPassword">
-      <el-input placeholder="确认密码" type="password"></el-input>
+    <el-form-item class="form-item" prop="checkPassword">
+      <el-input placeholder="确认密码" type="password" v-model="form.checkPassword"></el-input>
     </el-form-item>
 
     <el-button class="submit" type="primary" @click="handleRegSubmit">注册</el-button>
@@ -35,40 +36,63 @@ export default {
   data() {
     //rule当前的规则,目前是空的
     //value输入框的值
-    //callback是回调函数,必须要调用 是市场 踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩从                                                                                                                                                                                               
-    const checkPassword=()=>{
-      if(value===''){
+    //callback是回调函数,必须要调用 是市场 踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩从
+    const checkPassword = () => {
+      if (value === "") {
         callback(new Error("请再次输入密码"));
-      }else if(value !== this.form.password){
+      } else if (value !== this.form.password) {
         callback(new Error("两次密码输入不一致！"));
-      }else{
+      } else {
         //代表验证通过
         callback();
       }
-    }
+    };
     return {
       // 表单数据
       form: {
-        username:'', //用户名
-        nickname:'', //昵称
-        captcha:'', //验证码
-        password:'', //密码
-        checkPassword:'',  //确认密码
+        username: "", //用户名
+        nickname: "", //昵称
+        captcha: "", //验证码
+        password: "", //密码
+        checkPassword: "" //确认密码
       },
       // 表单规则
       rules: {
-        username:[{require:true,message:"用户名不能为空",trigger:"blur"}],
-        nickname:[{require:true,message:"昵称不能为空",trigger:"blur"}],
-        captcha:[{require:true,message:"验证码不能为空",trigger:"blur"}],
-        password:[{require:true,message:"密码不能为空",trigger:"blur"}],
+        username: [
+          { required: true, message: "用户名不能为空", trigger: "blur" }
+        ],
+        nickname: [{ required: true, message: "昵称不能为空", trigger: "blur" }],
+        captcha: [
+          { required: true, message: "验证码不能为空", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
         //validator 不能改，表示指向验证函数
-        checkPassword:[{validator:checkPassword,trigger:'blur'}]
+        checkPassword: [{ validator: checkPassword, trigger: "blur" }]
       }
-    }
+    };
   },
   methods: {
     // 发送验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      //判断如果手机号码是空,不请求
+      if (!this.form.username) {
+        this.$message.error("请输入手机号");
+        return;
+      }
+
+      //发送验证码
+      this.$axios({
+        url: "/captchas",
+        method: "POST",
+        data: {
+          tel: this.form.username //手机号
+        }
+      }).then(res => {
+        //解构
+        const { code } = res.data;
+        this.$alert(`模拟手机验证码是:${code}`);
+      });
+    },
     // 注册
     handleRegSubmit() {
       console.log(this.form);
