@@ -37,7 +37,7 @@ export default {
     //rule当前的规则,目前是空的
     //value输入框的值
     //callback是回调函数,必须要调用 是市场 踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩从
-    const checkPassword = () => {
+    const checkPassword = (rule,value,callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.form.password) {
@@ -95,7 +95,25 @@ export default {
     },
     // 注册
     handleRegSubmit() {
-      console.log(this.form);
+      // console.log(this.form);
+      this.$refs.form.validate(valid=>{
+        if(valid){
+          //可以使用...+变量名会指向剩余的属性
+          const {checkPassword,...rest}=this.form;
+
+          //调用注册接口
+          this.$axios({
+            url:'/accounts/register',
+            method:'POST',
+            data:rest
+          }).then(res=>{
+            //注册成功后帮用户自动登录
+            //commot 接受两个参数,第一个mutations参数是方法名,第二个是参数数据
+            this.$store.commit("user/setUserInfo",res.data)
+          })
+
+        }
+      })
     }
   }
 };
