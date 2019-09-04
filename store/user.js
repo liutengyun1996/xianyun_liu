@@ -1,8 +1,10 @@
 //用户管理
-export const state = {
-    userInfo: {
-        token: '',
-        user: {},
+export const state = () => {
+    return {
+        userInfo: {
+            token: '',
+            user: {},
+        }
     }
 }
 
@@ -18,6 +20,7 @@ export const mutations = {
             user: {}
         }
     }
+
 }
 
 

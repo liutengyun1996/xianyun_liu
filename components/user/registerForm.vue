@@ -33,6 +33,19 @@
  <script>
 export default {
   data() {
+    //rule当前的规则,目前是空的
+    //value输入框的值
+    //callback是回调函数,必须要调用 是市场 踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩踩从                                                                                                                                                                                               
+    const checkPassword=()=>{
+      if(value===''){
+        callback(new Error("请再次输入密码"));
+      }else if(value !== this.form.password){
+        callback(new Error("两次密码输入不一致！"));
+      }else{
+        //代表验证通过
+        callback();
+      }
+    }
     return {
       // 表单数据
       form: {
@@ -43,8 +56,15 @@ export default {
         checkPassword:'',  //确认密码
       },
       // 表单规则
-      rules: {}
-    };
+      rules: {
+        username:[{require:true,message:"用户名不能为空",trigger:"blur"}],
+        nickname:[{require:true,message:"昵称不能为空",trigger:"blur"}],
+        captcha:[{require:true,message:"验证码不能为空",trigger:"blur"}],
+        password:[{require:true,message:"密码不能为空",trigger:"blur"}],
+        //validator 不能改，表示指向验证函数
+        checkPassword:[{validator:checkPassword,trigger:'blur'}]
+      }
+    }
   },
   methods: {
     // 发送验证码
