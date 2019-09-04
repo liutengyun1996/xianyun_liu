@@ -47,7 +47,9 @@ export default {
             method: "POST", //重要   method没有s
             data: this.form
           }).then(res => {
-            console.log(res);
+            // console.log(res);
+            //commit接收两个参数,第一个mutations参数是方法名,第二个是参数数据
+            this.$store.commit("user/setUserInfo",res.data)
           });
         } else {
           console.log("验证失败");

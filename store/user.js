@@ -1,11 +1,25 @@
 //用户管理
-export const state={
-    userInfo:{
-        token:'123456',
-        user:{}
+export const state = {
+    userInfo: {
+        token: '',
+        user: {},
     }
 }
 
-export const mutations ={};
+export const mutations = {
+    //保存用户信息到state
+    setUserInfo(state, data) {
+        state.userInfo = data;
+    },
+    //清空userInfo
+    clearUserInfo(state) {
+        state.userInfo = {
+            token: "",
+            user: {}
+        }
+    }
+}
 
-export const actions ={};
+
+
+// export const actions ={};
