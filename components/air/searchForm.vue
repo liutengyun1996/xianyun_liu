@@ -5,7 +5,7 @@
       <span
         v-for="(item, index) in tabs"
         :key="index"
-        @click="handleSearchTab(item, index)"
+        @click="handleSearchTab(index)"
         :class="{active: index === currentTab}"
       >
         <i :class="item.icon"></i>
@@ -77,7 +77,11 @@ export default {
   },
   methods: {
     // tab切换时触发
-    handleSearchTab(item, index) {},
+    handleSearchTab(index) {
+      if (index === 1) {
+        this.$alert("目前暂时不支持往返", "提示");
+      }
+    },
 
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
@@ -178,32 +182,41 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+        const {departCity,departCode,destCity,destCode}=this.form;
+
+        //交叉赋值
+        this.form.departCity=destCity;
+        this.form.departCode=destCode;
+
+        this.form.destCity=departCity;
+        this.form.destCode=departCode;
+    },
 
     // 提交表单是触发
     handleSubmit() {
-    //   console.log(this.form);
-        const {departCity,destCity,departDate}=this.form;
-        //判断输入框不能为空
-        if(!departCity){
-            this.$alert("出发城市不能为空","提示");
-            return;
-        }
-        if(!destCity){
-            this.$alert("到达城市不能为空","提示");
-            return;
-        }
-        if(!departDate){
-            this.$alert("出发不能为空","提示");
-            return;
-        }
+      //   console.log(this.form);
+      const { departCity, destCity, departDate } = this.form;
+      //判断输入框不能为空
+      if (!departCity) {
+        this.$alert("出发城市不能为空", "提示");
+        return;
+      }
+      if (!destCity) {
+        this.$alert("到达城市不能为空", "提示");
+        return;
+      }
+      if (!departDate) {
+        this.$alert("出发不能为空", "提示");
+        return;
+      }
 
-        //跳转到机票列表页/air/flights
-        this.$router.push({
-            path:"/air/flights",
-            //url携带的参数
-            query:this.form
-        })
+      //跳转到机票列表页/air/flights
+      this.$router.push({
+        path: "/air/flights",
+        //url携带的参数
+        query: this.form
+      });
     }
   },
   mounted() {}
