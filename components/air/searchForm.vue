@@ -107,6 +107,11 @@ export default {
           //把带有value属性的对象添加到新数组中
           newData.push(v);
         });
+
+        //默认选中第一个
+        this.form.departCity = newData[0].value;
+        this.form.departCode = newData[0].sort;
+
         //显示到下拉列表中
         cb(newData);
       });
@@ -141,6 +146,11 @@ export default {
           // 把带有value属性的对象添加到新数组中
           newData.push(v);
         });
+
+        //默认选中第一个
+        this.form.destCity = newData[0].value;
+        this.form.destCode = newData[0].sort;
+
         //显示到下拉列表中
         cb(newData);
       });
@@ -156,15 +166,15 @@ export default {
 
     // 目标城市下拉选择时触发
     handleDestSelect(item) {
-        //把选中的值设置给form
-        this.form.destCity=item.value;
-        this.form.destCode=item.sort;
+      //把选中的值设置给form
+      this.form.destCity = item.value;
+      this.form.destCode = item.sort;
     },
 
     // 确认选择日期时触发
     handleDate(value) {
-        //转换
-        this.form.departDate=moment(value).format(`YYYY-MM-DD`);
+      //转换
+      this.form.departDate = moment(value).format(`YYYY-MM-DD`);
     },
 
     // 触发和目标城市切换时触发
@@ -172,7 +182,7 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
-        console.log(this.form)
+      console.log(this.form);
     }
   },
   mounted() {}
