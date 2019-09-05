@@ -22,19 +22,29 @@
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
           class="el-autocomplete"
+          v-model="form.departCity"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="到达城市">
+        <!-- fetch-suggestions: 每次输入时候都会执行，获取搜索建议，并且显示在输入框的下拉框中 -->
+        <!-- select：在下拉框中选中时候时候触发的事件 -->
         <el-autocomplete
           :fetch-suggestions="queryDestSearch"
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           class="el-autocomplete"
+            
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
         <!-- change 用户确认选择日期时触发 -->
-        <el-date-picker type="date" placeholder="请选择日期" style="width: 100%;" @change="handleDate"></el-date-picker>
+        <el-date-picker
+          type="date"
+          placeholder="请选择日期"
+          style="width: 100%;"
+          @change="handleDate"
+          
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label>
         <el-button style="width:100%;" type="primary" icon="el-icon-search" @click="handleSubmit">搜索</el-button>
@@ -54,7 +64,14 @@ export default {
         { icon: "iconfont icondancheng", name: "单程" },
         { icon: "iconfont iconshuangxiang", name: "往返" }
       ],
-      currentTab: 0
+      currentTab: 0,
+      form: {
+        departCity: "", // 出发城市
+        departCode: "", //出发城市代码
+        destCity: "", //到达城市
+        destCode: "", //到达城市代码
+        departDate: "" //日期字符串
+      },
     };
   },
   methods: {
@@ -64,17 +81,47 @@ export default {
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDepartSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+      if (!value) {
+        return;
+      }
+      //根据用户的输入请求建议城市
+      this.$axios({
+        url: "/airs/city",
+        //get参数
+        params: {
+          //输入框的关键字
+          name: value
+        }
+      }).then(res => {
+        //数组
+        const { data } = res.data;
+
+        //给数组中每个对象添加value属性
+        const newData = [];
+        data.forEach(v => {
+          //添加value属性
+          v.value = v.name.replace("市", "");
+          //把带有value属性的对象添加到新数组中
+          newData.push(v);
+        });
+        //显示到下拉列表中
+        cb(newData)
+      });
     },
 
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+    //   cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
     },
 
     // 出发城市下拉选择时触发
-    handleDepartSelect(item) {},
+    handleDepartSelect(item) {
+        console.log(item)
+                    // 把选中的值设置给form
+            this.form.departCity = item.value;
+            this.form.departCode = item.sort;
+    },
 
     // 目标城市下拉选择时触发
     handleDestSelect(item) {},
