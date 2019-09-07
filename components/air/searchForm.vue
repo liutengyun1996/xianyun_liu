@@ -21,6 +21,7 @@
           :fetch-suggestions="queryDepartSearch"
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
+          @blur="handleDeparBlur"
           class="el-autocomplete"
           v-model="form.departCity"
         ></el-autocomplete>
@@ -32,6 +33,7 @@
           :fetch-suggestions="queryDestSearch"
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
+          @blur="handleDestBlur"
           class="el-autocomplete"
           v-model="form.destCity"
         ></el-autocomplete>
@@ -72,7 +74,9 @@ export default {
         destCity: "", //到达城市
         destCode: "", //到达城市代码
         departDate: "" //日期字符串
-      }
+      },
+      departData: [], //存储后台返回的出发城市的数组
+      desrData: [] //存储后台返回的到达城市的数组
     };
   },
   methods: {
@@ -81,6 +85,17 @@ export default {
       if (index === 1) {
         this.$alert("目前暂时不支持往返", "提示");
       }
+    },
+    //出发城市输入框失去焦点时候触发
+    handleDeparBlur() {
+      this.form.departCity = this.departData[0] ? this.departData[0].value : "";
+      this.form.departCode = this.departData[0] ? this.departData[0].sort : "";
+    },
+
+    //到达城市输入框失去焦点时候触发
+    handleDestBlur() {
+      this.form.destCity = this.desrData[0] ? this.desrData[0].value : "";
+      this.form.destCode = this.desrData[0] ? this.desrData[0].sort : "";
     },
 
     // 出发城市输入框获得焦点时触发
@@ -113,9 +128,7 @@ export default {
         });
 
         //默认选中第一个
-        this.form.departCity = newData[0].value;
-        this.form.departCode = newData[0].sort;
-
+        this.departData=newData
         //显示到下拉列表中
         cb(newData);
       });
@@ -152,8 +165,7 @@ export default {
         });
 
         //默认选中第一个
-        this.form.destCity = newData[0].value;
-        this.form.destCode = newData[0].sort;
+        this.desrData=newData
 
         //显示到下拉列表中
         cb(newData);
@@ -183,14 +195,14 @@ export default {
 
     // 触发和目标城市切换时触发
     handleReverse() {
-        const {departCity,departCode,destCity,destCode}=this.form;
+      const { departCity, departCode, destCity, destCode } = this.form;
 
-        //交叉赋值
-        this.form.departCity=destCity;
-        this.form.departCode=destCode;
+      //交叉赋值
+      this.form.departCity = destCity;
+      this.form.departCode = destCode;
 
-        this.form.destCity=departCity;
-        this.form.destCode=departCode;
+      this.form.destCity = departCity;
+      this.form.destCode = departCode;
     },
 
     // 提交表单是触发
