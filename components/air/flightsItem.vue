@@ -46,17 +46,18 @@
         </el-col>
       </el-row>
     </div>
+    {{data.value}}
   </div>
 </template>
 
  <script>
 export default {
   props: {
-    // 数据
+    // data表示组件可以接收的属性
     data: {
       type: Object,
-      // 默认是空数组
-    //   default: {}
+      // 如果调用组件不传值,采用default的默认值
+      default: {}
     }
   }
 };
