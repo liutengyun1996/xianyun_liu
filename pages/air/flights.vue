@@ -14,6 +14,7 @@
             <FlightsItem
             v-for="(item,index) in flightsData.flights"
             :key="index"
+            :data="item"
             />
         </div>
       </div>
@@ -49,6 +50,7 @@ export default {
       }).then(res=>{
           //赋值给总数据
           this.flightsData=res.data;
+          console.log(res.data)
       })
   }
 };
