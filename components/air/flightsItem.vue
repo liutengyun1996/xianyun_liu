@@ -4,7 +4,8 @@
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
-          <span>{{data.airline_name}}</span> {{data.flight_no}}
+          <span>{{data.airline_name}}</span>
+          {{data.flight_no}}
         </el-col>
         <el-col :span="12">
           <el-row type="flex" justify="space-between" class="flight-info-center">
@@ -23,7 +24,7 @@
         </el-col>
         <el-col :span="6" class="flight-info-right">
           ￥
-          <span class="sell-price">{{data.base_price}}</span>起
+          <span class="sell-price">{{data.base_price/2}}</span>起
         </el-col>
       </el-row>
     </div>
@@ -33,14 +34,14 @@
         <el-col :span="4">低价推荐</el-col>
         <el-col :span="20">
           <!-- 可能会有多个座位，需要循环显示 -->
-          <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
+          <el-row type="flex" justify="space-between" align="middle" class="flight-sell" v-for="(item,index) in data.seat_infos" :key="index">
             <el-col :span="16" class="flight-sell-left">
-              <span>经济舱</span> | 上海一诺千金航空服务有限公司
+              <span>{{item.name}}</span> | {{item.supplierName}}
             </el-col>
-            <el-col :span="5" class="price">￥1345</el-col>
+            <el-col :span="5" class="price">{{item.org_settle_price}}</el-col>
             <el-col :span="3" class="choose-button">
               <el-button type="warning" size="mini">选定</el-button>
-              <p>剩余：83</p>
+              <p>剩余：{{item.discount}}</p>
             </el-col>
           </el-row>
         </el-col>
@@ -63,33 +64,33 @@ export default {
 
   //computed和data一样都可以在模板中渲染,区别在computed的属性值是一个函数,
   //最终的变量的值是由函数返回.
-  computed:{
-      //相隔时间
-      rankTime(){
-          //出发时间,返回值是数组
-          const dep=this.data.dep_time.split(":");
-          const arr=this.data.arr_time.split(":");
+  computed: {
+    //相隔时间
+    rankTime() {
+      //出发时间,返回值是数组
+      const dep = this.data.dep_time.split(":");
+      const arr = this.data.arr_time.split(":");
 
-          //如果到达的小时小于出发的小时,说明到第二天,需要到达小时+24
-          if(arr[0]<dep[0]){
-              arr[0]+=24;
-          }
-
-          //到达时间的分钟
-          const arrVal=arr[0]*60+ +arr[1];
-          //出发时间的分钟
-          const depVal=dep[0]*60+ +dep[1];
-          
-          //相隔的总分钟
-          const dis=arrVal-depVal;
-
-          //向下取整获取小时
-          const hours=Math.floor(dis/60);
-          //分钟
-          const min=dis%60;
-
-          return `${hours}时${min}分`;
+      //如果到达的小时小于出发的小时,说明到第二天,需要到达小时+24
+      if (arr[0] < dep[0]) {
+        arr[0] += 24;
       }
+
+      //到达时间的分钟
+      const arrVal = arr[0] * 60 + +arr[1];
+      //出发时间的分钟
+      const depVal = dep[0] * 60 + +dep[1];
+
+      //相隔的总分钟
+      const dis = arrVal - depVal;
+
+      //向下取整获取小时
+      const hours = Math.floor(dis / 60);
+      //分钟
+      const min = dis % 60;
+
+      return `${hours}时${min}分`;
+    }
   }
 };
 </script>
