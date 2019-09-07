@@ -7,15 +7,26 @@
         <div></div>
 
         <!-- 航班头部布局 -->
-        <FlightsListHead/>
+        <FlightsListHead />
 
         <!-- 航班信息 -->
         <div>
-            <FlightsItem
-            v-for="(item,index) in flightsData.flights"
-            :key="index"
-            :data="item"
-            />
+          <FlightsItem v-for="(item,index) in flightsData.flights" :key="index" :data="item" />
+          <!-- 分页 -->
+          <!-- size-change：每页条数切换时候触发 -->
+          <!-- current-change：页码切换时候触发 -->
+          <!-- current-page: 当前的页码 -->
+          <!-- page-size: 当前显示的条数 -->
+          <!-- total: 总条数 -->
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pageIndex"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
         </div>
       </div>
 
@@ -28,30 +39,44 @@
 </template>
 
  <script>
-import FlightsListHead from '@/components/air/flightsListHead.vue';
-import FlightsItem from '@/components/air/flightsItem.vue';
+import FlightsListHead from "@/components/air/flightsListHead.vue";
+import FlightsItem from "@/components/air/flightsItem.vue";
 export default {
   data() {
     return {
-        //机票列表返回的总数据,总数据包含4个属性,flights/info/options/tatol
-        flightsData:{}
+      //机票列表返回的总数据,总数据包含4个属性,flights/info/options/tatol
+      flightsData: {},
+      pageIndex: 1, //当前的页码
+      pageSize: 5, //当前的条数
+      total: 0 //总条数 
     };
   },
-  components:{
-      FlightsListHead,
-      FlightsItem
+  components: {
+    FlightsListHead,
+    FlightsItem
   },
-  mounted(){
-      //请求航班列表数据
-      this.$axios({
-          //路由的url参数
-          url:"airs",
-          params:this.$route.query
-      }).then(res=>{
-          //赋值给总数据
-          this.flightsData=res.data;
-          console.log(res.data)
-      })
+  mounted() {
+    //请求航班列表数据
+    this.$axios({
+      //路由的url参数
+      url: "airs",
+      params: this.$route.query
+    }).then(res => {
+      //赋值给总数据
+      this.flightsData = res.data;
+      console.log(res.data);
+    });
+  },
+  methods:{
+     //每页条数切换时候触发
+     handleSizeChange(){
+
+     },
+
+     //页码切换时候触发
+     handleCurrentChange(){
+         
+     }
   }
 };
 </script>
