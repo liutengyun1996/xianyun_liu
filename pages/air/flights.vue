@@ -11,7 +11,10 @@
 
         <!-- 航班信息 -->
         <div>
-            <FlightsItem/>
+            <FlightsItem
+            v-for="(item,index) in flightsData.flights"
+            :key="index"
+            />
         </div>
       </div>
 
@@ -24,15 +27,29 @@
 </template>
 
  <script>
- import FlightsListHead from '@/components/air/flightsListHead.vue';
-  import FlightsItem from '@/components/air/flightsItem.vue';
+import FlightsListHead from '@/components/air/flightsListHead.vue';
+import FlightsItem from '@/components/air/flightsItem.vue';
 export default {
   data() {
-    return {};
+    return {
+        //机票列表返回的总数据,总数据包含4个属性,flights/info/options/tatol
+        flightsData:{}
+    };
   },
   components:{
       FlightsListHead,
       FlightsItem
+  },
+  mounted(){
+      //请求航班列表数据
+      this.$axios({
+          //路由的url参数
+          url:"airs",
+          params:this.$route.query
+      }).then(res=>{
+          //赋值给总数据
+          this.flightsData=res.data;
+      })
   }
 };
 </script>

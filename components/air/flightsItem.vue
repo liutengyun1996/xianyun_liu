@@ -56,7 +56,7 @@ export default {
     data: {
       type: Object,
       // 默认是空数组
-      default: {}
+    //   default: {}
     }
   }
 };
