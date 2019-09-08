@@ -3,9 +3,9 @@
     <el-row type="flex" class="filters-top" justify="space-between" align="middle">
       <el-col :span="8">
         单程：
-        广州 - 上海
+        {{data.info.departCity}} - {{data.info.destCity}}
         /
-        2019-06-17
+        {{data.info.departDate}}
       </el-col>
       <el-col :span="4">
         <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="handleAirport">
@@ -45,9 +45,20 @@ export default {
       airSize: "" // 机型大小
     };
   },
+
+  props:{
+      //data是flights组件获取的大的数据,包含filgths/[info/options]/total
+      data:{
+          type:Object,
+          default:{}
+      }
+      
+  },
   methods: {
     // 选择机场时候触发
-    handleAirport(value) {},
+    handleAirport(value) {
+        console.log(value)
+    },
     // 选择出发时间时候触发
     handleFlightTimes(value) {},
     // 选择航空公司时候触发

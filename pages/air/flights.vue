@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FligthsFilters />
+        <FligthsFilters :data="flightsData" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -46,7 +46,9 @@ export default {
   data() {
     return {
       //机票列表返回的总数据,总数据包含4个属性,flights/info/options/tatol
-      flightsData: {},
+      flightsData: {
+        info:{}
+      },
 
       //当前显示的列表数组
       dataList: [],
@@ -69,7 +71,7 @@ export default {
     }).then(res => {
       //赋值给总数据
       this.flightsData = res.data;
-      //   console.log(res.data);
+        // console.log(res.data);
       //分页的总条数
       this.total = this.flightsData.flights.length;
 
