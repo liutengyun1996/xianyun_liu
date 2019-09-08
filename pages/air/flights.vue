@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FligthsFilters :data="flightsData" />
+        <FligthsFilters :data="cacheFlightsData" @setDataList="setDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -47,8 +47,15 @@ export default {
     return {
       //机票列表返回的总数据,总数据包含4个属性,flights/info/options/tatol
       flightsData: {
-        info:{},
-        options:{}
+        info: {},
+        options: {}
+      },
+
+      //代表是大的数据,初始值和上面的flightsData是一样的,
+      //这个变量一旦赋值之后不能在被修改
+      cacheFlightsData: {
+        info: {},
+        options: {}
       },
 
       //当前显示的列表数组
@@ -72,7 +79,10 @@ export default {
     }).then(res => {
       //赋值给总数据
       this.flightsData = res.data;
-        console.log(res.data);
+      console.log(res.data);
+
+      //赋值给缓存总数据
+      this.cacheFlightsData = {...res.data};
       //分页的总条数
       this.total = this.flightsData.flights.length;
 
@@ -81,6 +91,23 @@ export default {
     });
   },
   methods: {
+    //该方法传递给子组件用于修改dataList
+    setDataList(arr) {
+      // 修改总的航班列表
+      this.flightsData.flights = arr;
+      console.log(this.flightsData.flights);
+      // 重新回到第一页
+      this.pageIndex = 1;
+
+      //按照数学公式切换dataList的值
+      this.dataList = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+      // 修改总条数
+      this.total = arr.length;
+    },
+
     //每页条数切换时候触发
     handleSizeChange(val) {
       this.pageSize = val;
