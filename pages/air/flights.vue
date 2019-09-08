@@ -4,14 +4,14 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FligthsFilters />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
 
         <!-- 航班信息 -->
         <div>
-          <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item" />
+          <FlightsItem v-for="(item,index) in dataList" :key="item.id" :data="item" />
           <!-- 分页 -->
           <!-- size-change：每页条数切换时候触发 -->
           <!-- current-change：页码切换时候触发 -->
@@ -41,6 +41,7 @@
  <script>
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
+import FligthsFilters from "@/components/air/flightsFilters.vue";
 export default {
   data() {
     return {
@@ -48,15 +49,16 @@ export default {
       flightsData: {},
 
       //当前显示的列表数组
-      dataList:[],
+      dataList: [],
       pageIndex: 1, //当前的页码
       pageSize: 5, //当前的条数
-      total: 0 //总条数 
+      total: 0 //总条数
     };
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FligthsFilters
   },
   mounted() {
     //请求航班列表数据
@@ -67,33 +69,33 @@ export default {
     }).then(res => {
       //赋值给总数据
       this.flightsData = res.data;
-    //   console.log(res.data);
-    //分页的总条数
-    this.total=this.flightsData.flights.length;
+      //   console.log(res.data);
+      //分页的总条数
+      this.total = this.flightsData.flights.length;
 
-    //第一页的值
-    this.dataList=this.flightsData.flights.slice(0,this.pageSize);
+      //第一页的值
+      this.dataList = this.flightsData.flights.slice(0, this.pageSize);
     });
   },
-  methods:{
-     //每页条数切换时候触发
-     handleSizeChange(val){
-         this.pageSize=val;
+  methods: {
+    //每页条数切换时候触发
+    handleSizeChange(val) {
+      this.pageSize = val;
 
-         //按照数学公式切换dataList的值
-         this.dataList=this.flightsData.flights.slice(0,val);
-     },
+      //按照数学公式切换dataList的值
+      this.dataList = this.flightsData.flights.slice(0, val);
+    },
 
-     //页码切换时候触发,val是点击的页码
-     handleCurrentChange(val){
-        this.pageIndex=val;//当前页
+    //页码切换时候触发,val是点击的页码
+    handleCurrentChange(val) {
+      this.pageIndex = val; //当前页
 
-        //按照数学公式切换dataList的值
-        this.dataList=this.flightsData.flights.slice(
-            (this.pageIndex-1)*this.pageSize,
-            this.pageIndex*this.pageSize
-        );
-     }
+      //按照数学公式切换dataList的值
+      this.dataList = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+    }
   }
 };
 </script>
