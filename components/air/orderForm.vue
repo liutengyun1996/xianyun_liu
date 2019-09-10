@@ -179,7 +179,23 @@ export default {
         seat_xid: this.$route.query.seat_xid,
         air: this.$route.query.id
       };
+       //判断乘机人
+       if(!this.users[0].username||!this.users[0].id){
+           this.$message.error("乘机人不能为空");
+           return;
+       } 
 
+       //联系人
+       if(!this.contactName){
+           this.$message.error("联系人不能为空");
+           return;
+       }
+
+       //联系电话
+       if(!this.contactPhone){
+           this.$message.error("联系电话不能为空");
+           return;
+       }
       //提交订单
       this.$axios({
           url:'/airorders',
