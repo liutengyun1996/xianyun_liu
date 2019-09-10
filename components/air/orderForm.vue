@@ -67,6 +67,8 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <!-- 模板中引用总价格触发计算 -->
+    <span v-show="false">{{allPrice}}</span>
   </div>
 </template>
 
@@ -95,6 +97,33 @@ export default {
       //机票的数据
       infoData: {}
     };
+  },
+  computed: {
+    //总价格
+    allPrice() {
+    //   如果请求未完成,暂时不需要计算,返回0;
+        if(!this.infoData.seat_infos){
+            return 0;
+        }
+
+      let price = 0;
+
+      //机票单价,取座位信息的第一个价格
+      price += this.infoData.seat_infos.org_settle_price;
+
+      //燃油费
+      price += this.infoData.airport_tax_audlet;
+
+      //保险数据
+      price += 30 * this.insurances.length;
+
+      price *= this.users.length;
+
+      //把值存到store
+      this.$store.commit("air/setAllPirce", price);
+
+      return price;
+    }
   },
   mounted() {
     const { id, seat_xid } = this.$route.query;

@@ -1,15 +1,20 @@
-export const state=()=>{
-    return{
+export const state = () => {
+    return {
         //机票的信息的对象
-        infoData:{
-            seat_infos:{}
-        }
+        infoData: {
+            seat_infos: {}
+        },
+        allPrice: 0,
     }
 }
 
-export const mutations  = {
+export const mutations = {
     //修改机票信息
-    setInfoData(state,data){
-        state.infoData=data;
+    setInfoData(state, data) {
+        state.infoData = data;
+    },
+    //修改总价格
+    setAllPirce(state, price) {
+        state.allPrice = price
     }
 }
