@@ -28,6 +28,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
+        <!-- 先实现航空公司 -->
         <el-select size="mini" v-model="company" placeholder="航空公司" @change="handleCompany">
           <el-option
             v-for="(item,index) in data.options.company"
@@ -79,15 +80,34 @@ export default {
       type: Object,
       default: {}
     }
+    
   },
   methods: {
     // 选择机场时候触发
     handleAirport(value) {
-      console.log(value);
+      // console.log(value);
+
+        const arr =this.data.flights.filter(v=>{
+          return v.org_airport_name === value;
+        })
+        this.$emit("setDataList",arr);
     },
     // 选择出发时间时候触发
     handleFlightTimes(value) {
-      console.log(value);
+      // console.log(value);
+      //数组的解构赋值 const [from, to] = [6,12]
+      const [from,to]=value.split(",");
+      
+      //数据过滤,只保留选中的出发时间的航班
+      const arr =this.data.flights.filter(v=>{
+          //每趟航班出发的小时
+          const current = v.dep_time.split(":")[0];
+
+          //需要满足在事件段内 比如 6-12;
+          return +current>=+from && +current<+to;
+      });
+
+      this.$emit("setDataList",arr);
     },
     // 选择航空公司时候触发
     handleCompany(value) {
@@ -99,23 +119,30 @@ export default {
     },
     // 选择机型时候触发
     handleAirSize(value) {
-      console.log(value);
+      // console.log(value);
+      const arr = this.data.flights.filter(v=>{
+        return v.plane_size===value;
+      });
+      this.$emit("setDataList",arr);
     },
 
     // 撤销条件时候触发
     handleFiltersCancel() {}
-  }
+  },
+
 };
 </script>
 
  <style scoped lang="less">
 .filters {
   margin-bottom: 20px;
+  
 }
 .filters-top {
   > div {
     /deep/ .el-select {
       margin-left: 10px;
+      
     }
   }
 }
