@@ -35,7 +35,11 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}份×1  最高赔付${item.compensation}`" border @change="handleChange(item.id)"></el-checkbox>
+          <el-checkbox
+            :label="`${item.type}：￥${item.price}份×1  最高赔付${item.compensation}`"
+            border
+            @change="handleChange(item.id)"
+          ></el-checkbox>
         </div>
       </div>
     </div>
@@ -45,11 +49,11 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input></el-input>
+            <el-input v-model="contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
@@ -57,7 +61,7 @@
           </el-form-item>
 
           <el-form-item label="验证码">
-            <el-input></el-input>
+            <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -78,27 +82,34 @@ export default {
         }
       ],
 
-        //保险数据id的集合
-        insurances:[],
+      //保险数据id的集合
+      insurances: [],
+
+      contactName: "", //联系人
+      contactPhone: "", //联系电话
+      captcha: "", //验证码
+      invoice: false, //发票字段,默认false
+      seat_xid: "", //座位id,来自于url的参数
+      air: "", //航班的id,来自于url的id
 
       //机票的数据
-      infoData:{}
+      infoData: {}
     };
   },
-  mounted(){
-      const{id,seat_xid}=this.$route.query;
+  mounted() {
+    const { id, seat_xid } = this.$route.query;
 
-      //请求机票数据
-      this.$axios({
-          url:"/airs/"+id,
-          params:{
-              seat_xid
-          }
-      }).then(res=>{
-          //保存机票的数据
-          this.infoData=res.data;
-        //   console.log(this.infoData)
-      })
+    //请求机票数据
+    this.$axios({
+      url: "/airs/" + id,
+      params: {
+        seat_xid
+      }
+    }).then(res => {
+      //保存机票的数据
+      this.infoData = res.data;
+      //   console.log(this.infoData)
+    });
   },
   methods: {
     // 添加乘机人
@@ -117,26 +128,57 @@ export default {
       this.users.splice(index, 1);
     },
     //选中保险时候触发
-    handleChange(id){
-        //先判断数组中是否已经包含该id,
-        const index=this.insurances.indexOf(id);
+    handleChange(id) {
+      //先判断数组中是否已经包含该id,
+      const index = this.insurances.indexOf(id);
 
-        //包含了应该删除
-        if(index>-1){
-            this.insurances.splice(index,1)
-        }else{
-            //添加id到数组
-            this.insurances.push(id);
-        }
+      //包含了应该删除
+      if (index > -1) {
+        this.insurances.splice(index, 1);
+      } else {
+        //添加id到数组
+        this.insurances.push(id);
+      }
 
-        console.log(this.insurances)
+      console.log(this.insurances);
     },
 
-    // 发送手机验证码
-    handleSendCaptcha() {},
+    // 发送手机验证码,复制注册registerForm表单的功能
+    handleSendCaptcha() {
+      //判断如果手机号码是空,不请求
+      if (!this.contactPhone) {
+        this.$message.error("请输入手机号码");
+        return;
+      }
+
+      //发送验证码
+      this.$axios({
+        url: "/captchas",
+        method: "POST",
+        data: {
+          tel: this.contactPhone //手机号码
+        }
+      }).then(res => {
+        //解构出code属性
+        const { code } = res.data;
+
+        this.$alert(`模拟验证码是:${code}`, "提示");
+      });
+    },
     // 提交订单
     handleSubmit() {
-      console.log(this.users);
+      //   console.log(this.users);
+      //提交给后台接口的字段
+      const data = {
+        users: this.users,
+        insurances: this.insurances,
+        contactName: this.contactName,
+        contactPhone: this.contactPhone,
+        invoice: this.invoice,
+        captcha: this.captcha,
+        seat_xid: this.$route.query.seat_xid,
+        air: this.$route.query.id
+      };
     }
   }
 };
