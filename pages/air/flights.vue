@@ -31,8 +31,7 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside">
-        <!-- 侧边栏组件 -->
+      <FligthsAside/>
       </div>
     </el-row>
   </section>
@@ -42,6 +41,7 @@
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
 import FligthsFilters from "@/components/air/flightsFilters.vue";
+import FligthsAside from "@/components/air/flightsAside.vue";
 export default {
   data() {
     return {
@@ -68,7 +68,8 @@ export default {
   components: {
     FlightsListHead,
     FlightsItem,
-    FligthsFilters
+    FligthsFilters,
+    FligthsAside
   },
   mounted() {
     //请求航班列表数据
