@@ -35,7 +35,7 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}份×1  最高赔付${item.compensation}`" border></el-checkbox>
+          <el-checkbox :label="`${item.type}：￥${item.price}份×1  最高赔付${item.compensation}`" border @change="handleChange(item.id)"></el-checkbox>
         </div>
       </div>
     </div>
@@ -77,6 +77,10 @@ export default {
           id: ""
         }
       ],
+
+        //保险数据id的集合
+        insurances:[],
+
       //机票的数据
       infoData:{}
     };
@@ -111,6 +115,21 @@ export default {
       // 把users中的某一项删除掉
       // 删除数组中某个元素使用splice，截取数组中的某一项时候使用slice
       this.users.splice(index, 1);
+    },
+    //选中保险时候触发
+    handleChange(id){
+        //先判断数组中是否已经包含该id,
+        const index=this.insurances.indexOf(id);
+
+        //包含了应该删除
+        if(index>-1){
+            this.insurances.splice(index,1)
+        }else{
+            //添加id到数组
+            this.insurances.push(id);
+        }
+
+        console.log(this.insurances)
     },
 
     // 发送手机验证码
