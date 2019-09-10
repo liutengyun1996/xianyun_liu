@@ -50,6 +50,9 @@ export default {
             // console.log(res);
             //commit接收两个参数,第一个mutations参数是方法名,第二个是参数数据
             this.$store.commit("user/setUserInfo",res.data)
+            this.$router.push({
+              path:'/'
+            })
           });
         } else {
           console.log("验证失败");
