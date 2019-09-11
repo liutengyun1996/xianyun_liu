@@ -101,10 +101,10 @@ export default {
   computed: {
     //总价格
     allPrice() {
-    //   如果请求未完成,暂时不需要计算,返回0;
-        if(!this.infoData.seat_infos){
-            return 0;
-        }
+      //   如果请求未完成,暂时不需要计算,返回0;
+      if (!this.infoData.seat_infos) {
+        return 0;
+      }
 
       let price = 0;
 
@@ -237,7 +237,17 @@ export default {
         },
         data
       }).then(res => {
-        console.log(res);
+        // console.log(res);
+
+        //订单id
+        const { id } = res.data.data;
+
+        this.$router.push({
+          path: "/air/pay",
+          query: {
+            id
+          }
+        });
       });
     }
   }
