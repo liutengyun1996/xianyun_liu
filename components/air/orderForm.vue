@@ -233,7 +233,6 @@ export default {
         method: "POST",
         //可以给接口单独加上请求头
         headers: {
-          //   Authorization:`Bearer ${this.$store.state.user.userInfo.token}`
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         },
         data
